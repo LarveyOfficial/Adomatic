@@ -23,7 +23,7 @@ class Ad(commands.Cog):
         return int(ctx.author.id) in Config.OWNERIDS
 
 
-    @tasks.loop(seconds = 10800)
+    @tasks.loop(seconds = 10)
     async def cycle(self):
         if self.send_ads:
             ad = Config.ADS.find_one({'index': self.index})
@@ -88,7 +88,7 @@ class Ad(commands.Cog):
         if not (seconds == 0 and minutes == 0 and hours == 0):
             self.cycle.change_interval(seconds=seconds, minutes=minutes, hours=hours)
 
-    @commands.group(aliases = ["ad"])
+    @commands.group(aliases = ["Ad"])
     @commands.check(owner)
     async def ads(self, ctx):
         if ctx.invoked_subcommand is None:
@@ -104,7 +104,7 @@ class Ad(commands.Cog):
             )
             await ctx.send(embed = embed)
 
-    @ad.command(aliases = ['create'])
+    @ads.command(aliases = ['create'])
     async def add(self, ctx, *, theAd:str=None):
         if theAd == None:
             embed = discord.Embed(
@@ -123,7 +123,7 @@ class Ad(commands.Cog):
             )
             await ctx.send(embed = embed)
 
-    @ad.command()
+    @ads.command()
     async def toggle(self, ctx):
         self.send_ads = not self.send_ads
         state = ""
@@ -145,7 +145,7 @@ class Ad(commands.Cog):
             return False
         return True
 
-    @ad.command()
+    @ads.command()
     async def interval(self, ctx, *, time:str=None):
         if time is None:
             embed = discord.Embed(
@@ -204,7 +204,7 @@ class Ad(commands.Cog):
 
 
 
-    @ad.command()
+    @ads.command()
     async def list(self, ctx):
         documentnum = Config.ADS.count_documents({})
         if documentnum == 0:
@@ -227,7 +227,7 @@ class Ad(commands.Cog):
                 color = Config.MAINCOLOR
             )
             await ctx.send(embed = embed)
-    @ad.command(aliases = ["remove"])
+    @ads.command(aliases = ["remove"])
     async def delete(self, ctx, *, index:int=None):
         if index == None:
             embed = discord.Embed(

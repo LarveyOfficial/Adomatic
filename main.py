@@ -9,6 +9,9 @@ import logging
 import random
 import traceback
 
+
+cogs = ["Ad","Setup"]
+
 async def get_prefix(bot, message):
     return commands.when_mentioned_or("a!")(bot, message)
 
@@ -19,7 +22,7 @@ bot = commands.Bot(command_prefix = get_prefix, case_insensitive = True)
 bot.remove_command("help")
 
 # Cogs
-cogs = ["Ad", "Setup"]
+
 
 for cog in cogs:
     bot.load_extension("Cogs." + cog)
@@ -29,6 +32,7 @@ def owner(ctx):
     return int(ctx.author.id) in Config.OWNERIDS
 
 @commands.check(owner)
+@bot.command()
 async def restart(ctx):
     """
     Restart the bot.
