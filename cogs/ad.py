@@ -23,7 +23,7 @@ class Ad(commands.Cog):
         return int(ctx.author.id) in Config.OWNERIDS
 
 
-    @tasks.loop(seconds = 30)
+    @tasks.loop(seconds = 10800)
     async def cycle(self):
         if self.send_ads:
             ad = Config.ADS.find_one({'index': self.index})
