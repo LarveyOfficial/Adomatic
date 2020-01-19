@@ -29,18 +29,19 @@ class Ad(commands.Cog):
             ad = Config.ADS.find_one({'index': self.index})
             if ad is not None and self.index > 0:
                 adMessage = ad['ad']
-                if 'ads' in server.keys():
-                    guild = self.bot.get_guild(server['server_id'])
-                    if guild is not None:
-                        channel = guild.get_channel(server['ads'])
-                        if channel is not None:
-                            embed = discord.Embed(
-                                title = "**Ad**",
-                                description = adMessage,
-                                color = Config.MAINCOLOR
-                            )
-                            embed.set_footer(text="Ad " + str(self.index) + " of " + str(Config.ADS.count_documents({})))
-                            await channel.send(embed = embed)
+                for server in Config.SERVERS.find({}):
+                    if 'ads' in server.keys():
+                        guild = self.bot.get_guild(server['server_id'])
+                        if guild is not None:
+                            channel = guild.get_channel(server['ads'])
+                            if channel is not None:
+                                embed = discord.Embed(
+                                    title = "**Ad**",
+                                    description = adMessage,
+                                    color = Config.MAINCOLOR
+                                )
+                                embed.set_footer(text="Ad " + str(self.index) + " of " + str(Config.ADS.count_documents({})))
+                                await channel.send(embed = embed)
                 if self.index >= Config.ADS.count_documents({}):
                     self.index = 1
                 else:
@@ -98,7 +99,7 @@ class Ad(commands.Cog):
                 state = "off"
             embed = discord.Embed(
                 title = f"Automatic Ads (currently toggled {state})",
-                description = "`n!ads add <Text>` - Adds an ad to the list of ads\n`n!ads list` - Lists all the ads\n`n!ads remove <Ad index>` - Removes an ad from the list.\n`n!ads interval <0h0m0s>` - Changes time for Next run of Ads\n`n!ads toggle` - Toggle on or off Ads",
+                description = "`a!ads add <Text>` - Adds an ad to the list of ads\n`a!ads list` - Lists all the ads\n`a!ads remove <Ad index>` - Removes an ad from the list.\n`a!ads interval <0h0m0s>` - Changes time for Next run of Ads\n`a!ads toggle` - Toggle on or off Ads",
                 color = Config.MAINCOLOR
             )
             await ctx.send(embed = embed)
@@ -149,7 +150,7 @@ class Ad(commands.Cog):
         if time is None:
             embed = discord.Embed(
                 title = "ERROR",
-                description = "Please Provide a Time. e.g. `n!ads interval 1h3m3s`",
+                description = "Please Provide a Time. e.g. `a!ads interval 1h3m3s`",
                 color = Config.ERRORCOLOR
             )
             await ctx.send(embed = embed)
@@ -185,7 +186,7 @@ class Ad(commands.Cog):
             if seconds == 0 and minutes == 0 and hours == 0:
                 embed = discord.Embed(
                     title = "ERROR",
-                    description = "Please Provide a Time. e.g. `n!ads interval 1h30m30s`",
+                    description = "Please Provide a Time. e.g. `a!ads interval 1h30m30s`",
                     color = Config.ERRORCOLOR
                 )
                 await ctx.send(embed = embed)

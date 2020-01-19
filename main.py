@@ -19,7 +19,7 @@ bot = commands.Bot(command_prefix = get_prefix, case_insensitive = True)
 bot.remove_command("help")
 
 # Cogs
-cogs = ["ad"]
+cogs = ["Ad", "Setup"]
 
 for cog in cogs:
     bot.load_extension("Cogs." + cog)
